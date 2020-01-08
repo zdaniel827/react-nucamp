@@ -1,11 +1,10 @@
-import React, { Component } from "react";
+import React from "react";
 import { Card, CardImg, CardText, CardBody, CardTitle } from "reactstrap";
-
-class CampsiteInfo extends Component{
     
-    renderSelectedCampsite(campsite) {
-        if (campsite) {
-            return (
+function RenderSelectedCampsite({campsite}) {
+    if (campsite) {
+        return (
+            <div className="col-md-5 m-1">
                 <Card>
                     <CardImg top src={campsite.image} alt={campsite.name} />
                     <CardBody>
@@ -13,43 +12,45 @@ class CampsiteInfo extends Component{
                         <CardText>{campsite.description}</CardText>
                     </CardBody> 
                 </Card>
-            )
-        }
-        return <div />;
+            </div>
+        )
     }
+    return <div />;
+}
 
-    renderComments(comments) {
-        if (comments) {
-            return (
-                <div>
-                    <h4>Comments</h4>
-                    {this.props.selectedCampsite.comments.map(comment => {
-                        return (
-                            <div key={comment.id}>
-                                <div>{comment.text}</div>
-                                <div className="pb-3">
-                                    {`--${comment.author}, ${new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}`}
-                                </div>
-                            </div>
-                        )
-                    })}
-                </div>
-            )
-        }
-    }
-
-    render() {
+function RenderComments({comments}) {
+    if (comments) {
         return (
-            <div className="container">
-                <div className="row">
-                    <div className="col-md-5 m-1">
-                        {this.renderSelectedCampsite(this.props.selectedCampsite)}
-                    </div>
-                    <div className="col-md-5 m-1">{this.renderComments(this.props.selectedCampsite)}</div>
-                </div>
+            <div className="col-md-5 m-1">
+                <h4>Comments</h4>
+                {comments.map(comment => {
+                    return (
+                        <div key={comment.id}>
+                            <div>{comment.text}</div>
+                            <div className="pb-3">
+                                --{comment.author}, {' '} {new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit'}).format(new Date(Date.parse(comment.date)))}
+                            </div>
+                        </div>
+                    )
+                })}
             </div>
         )
     }
 }
+
+function CampsiteInfo(props) {
+    if (props.selectedCampsite) {
+        return (
+            <div className="container">
+                <div className="row">
+                    <RenderSelectedCampsite campsite={props.selectedCampsite} />
+                    <RenderComments comments={props.selectedCampsite.comments} />
+                </div>
+            </div>
+        )
+    }
+    return <div />
+}
+
 
 export default CampsiteInfo;
